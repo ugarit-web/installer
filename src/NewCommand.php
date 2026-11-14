@@ -1635,7 +1635,7 @@ PEST;
     protected function getVersion(InputInterface $input)
     {
         if ($input->getOption('dev')) {
-            return 'dev-master';
+            return 'dev-main';
         }
 
         return '';
