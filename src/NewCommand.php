@@ -24,6 +24,7 @@ use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 use Throwable;
 
+use function Ugarit\Installer\Console\Support\collect;
 use function Ugarit\Installer\Console\Support\join_paths;
 use function Ugarit\Prompts\callout;
 use function Ugarit\Prompts\confirm;
@@ -380,14 +381,17 @@ class NewCommand extends Command
      */
     protected function ensureExtensionsAreAvailable(InputInterface $input, OutputInterface $output): void
     {
-        $availableExtensions = get_loaded_extensions();
+        $availableExtensions = array_map('strtolower', get_loaded_extensions());
 
         $missingExtensions = collect([
             'ctype',
+            'curl',
+            'fileinfo',
             'filter',
             'hash',
             'mbstring',
             'openssl',
+            'pdo',
             'session',
             'tokenizer',
         ])->reject(fn ($extension) => in_array($extension, $availableExtensions));
@@ -397,7 +401,7 @@ class NewCommand extends Command
         }
 
         throw new RuntimeException(
-            sprintf('The following PHP extensions are required but are not installed: %s', $missingExtensions->join(', ', ', and '))
+            sprintf('The following PHP extensions are required by Ugarit but are not installed: %s. Please enable them in your php.ini file.', $missingExtensions->join(', ', ', and '))
         );
     }
 
