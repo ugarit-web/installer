@@ -1628,7 +1628,11 @@ PEST;
             return '.';
         }
 
-        return str_starts_with($name, DIRECTORY_SEPARATOR) ? $name : getcwd().'/'.$name;
+        if (str_starts_with($name, DIRECTORY_SEPARATOR) || str_starts_with($name, '/') || preg_match('/^[A-Za-z]:[\\\\\/]/', $name)) {
+            return $name;
+        }
+
+        return getcwd().'/'.$name;
     }
 
     /**
